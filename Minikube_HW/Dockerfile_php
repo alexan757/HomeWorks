@@ -1,0 +1,11 @@
+FROM php:7.4-apache
+LABEL Aleksandr Sannikov
+RUN apt-get update
+RUN apt-get install -y libyaml-dev
+RUN pecl install yaml
+RUN docker-php-ext-enable yaml
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+COPY index.php /var/www/html/index.php
+COPY secret.yaml /var/www/html/secret.yaml
+COPY config.yaml /var/www/html/config.yaml
+RUN chown -R www-data:www-data /var/www/html

@@ -1,0 +1,6 @@
+FROM mysql:5.7
+LABEL Aleksandr Sannikov
+USER root
+RUN chmod 755 /var/lib/mysql 
+ENV MYSQL_DATABASE=mysql_db
+COPY ./database.sql /docker-entrypoint-initdb.d/

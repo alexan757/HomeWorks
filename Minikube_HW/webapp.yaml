@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: alexan757/php:7.4
+        ports:
+        - containerPort: 80
+        env:
+          - name: USER_NAME
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: username
+          - name: USER_PWD
+            valueFrom:
+              secretKeyRef:
+                name: secret
+                key: password
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: database_url
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-service
+spec:
+  selector:
+    app: webapp
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+
